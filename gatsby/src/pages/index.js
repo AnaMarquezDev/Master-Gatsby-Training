@@ -4,10 +4,9 @@ import Layout from '../components/Layout';
 
 export default function HomePage() {
   return (
-    <>
-      <Nav />
+    <Layout>
       <p>Hey! I'm the home page</p>
       <p>Hey! I'm another element</p>
-    </>
+    </Layout>
   );
 }
