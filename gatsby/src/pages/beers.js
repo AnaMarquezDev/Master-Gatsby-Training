@@ -1,13 +1,13 @@
 import React from 'react';
+
 import Nav from '../components/Nav';
 import Layout from '../components/Layout';
 
-export default function HomePage() {
+export default function BeersPage() {
   return (
     <>
       <Nav />
-      <p>Hey! I'm the home page</p>
-      <p>Hey! I'm another element</p>
+      <p>Hey! I'm the Beers Page</p>
     </>
   );
 }
