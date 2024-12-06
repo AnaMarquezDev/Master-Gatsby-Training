@@ -62,6 +62,46 @@ async function turnToppingsIntoPages({ graphql, actions }) {
   });
 }
 
+async function turnSlicemastersIntoPages({ graphql, actions }) {
+  // 1. Query all slicemasters
+  const { data } = await graphql(`
+    query {
+      slicemasters: allSanityPerson {
+        totalCount
+        nodes {
+          name
+          id
+          slug {
+            current
+          }
+        }
+      }
+    }
+  `);
+  // TODO: 2. Turn each slicemaster into their own page (TODO)
+
+  // 3. Figure out how many pages there are based on how many slicemasters there are, and how many per page!
+  const pageSize = parseInt(process.env.GATSBY_PAGE_SIZE);
+  const pageCount = Math.ceil(data.slicemasters.totalCount / pageSize);
+  console.log(
+    `There are ${data.slicemasters.totalCount} total people. And we have ${pageCount} pages with ${pageSize} per page`
+  );
+  // 4. Loop from 1 to n and create the pages for them
+  Array.from({ length: pageCount }).forEach((_, i) => {
+    console.log(`Creating page ${i}`);
+    actions.createPage({
+      path: `/slicemasters/${i + 1}`,
+      component: path.resolve('./src/pages/slicemasters.js'),
+      // This data is pass to the template when we create it
+      context: {
+        skip: i * pageSize,
+        currentPage: i + 1,
+        pageSize,
+      },
+    });
+  });
+}
+
 async function fetchBeersTurnIntoNodes({
   actions,
   createNodeId,
@@ -98,10 +138,14 @@ export async function sourceNodes(params) {
 }
 
 export async function createPages(params) {
-  // create pages dynamically
-  await turnPizzasIntoPages(params);
-  await turnToppingsIntoPages(params);
-  // 1. pizzas
-  // 2. toppings
-  // 3. slicemasters
+  // Create pages dynamically
+  // Wait for all promises to be resolved before finishing this function
+  await Promise.all([
+    turnPizzasIntoPages(params),
+    turnToppingsIntoPages(params),
+    turnSlicemastersIntoPages(params),
+  ]);
+  // 1. Pizzas
+  // 2. Toppings
+  // 3. Slicemasters
 }
