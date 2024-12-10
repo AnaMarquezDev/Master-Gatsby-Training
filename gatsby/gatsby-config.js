@@ -8,8 +8,10 @@ export default {
     title: `Gatsby`,
     siteUrl: `https://gatsby.pizza`,
     description: `Blazing fast modern site generator for React`,
+    twitter: `@gatsbyjs`,
   },
   plugins: [
+    `gatsby-plugin-react-helmet`,
     'gatsby-plugin-styled-components',
     {
       resolve: 'gatsby-source-sanity',
